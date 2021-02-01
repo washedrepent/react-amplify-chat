@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from 'react';
+
+import Amplify from '@aws-amplify/core';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import { listMessages } from './graphql/queries';
 import '@aws-amplify/pubsub';
-import { onCreateMessage } from '../graphql/subscriptions';
+
+import { createMessage } from './graphql/mutations';
+import { onCreateMessage } from './graphql/subscriptions';
+import { messagesByChannelId } from './graphql/queries';
+
+import awsExports from './aws-exports';
 import './App.css';
+
 
 function App() {
   const [messages, setMessages] = useState([]);
+  const [messageBody, setMessageBody] = useState('');
   //loading intial messages (in order)
   useEffect(() => {
       API
