@@ -1,0 +1,17 @@
+{
+  "trigger": true,
+  "modules": [
+    "add-to-group"
+  ],
+  "parentResource": "reactamplifychat7c1567847c156784",
+  "functionName": "reactamplifychat7c1567847c156784PostConfirmation",
+  "resourceName": "reactamplifychat7c1567847c156784PostConfirmation",
+  "parentStack": "auth",
+  "triggerEnvs": [],
+  "triggerDir": "C:\\Users\\Work\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\amplify-category-auth\\provider-utils\\awscloudformation\\triggers\\PostConfirmation",
+  "triggerTemplate": "PostConfirmation.json.ejs",
+  "roleName": "reactamplifychat7c1567847c156784PostConfirmation",
+  "skipEdit": true,
+  "GROUP": "",
+  "enableCors": false
+}

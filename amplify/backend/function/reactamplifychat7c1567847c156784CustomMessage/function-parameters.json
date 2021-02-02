@@ -1,0 +1,25 @@
+{
+  "trigger": true,
+  "modules": [
+    "verification-link"
+  ],
+  "parentResource": "reactamplifychat7c1567847c156784",
+  "functionName": "reactamplifychat7c1567847c156784CustomMessage",
+  "resourceName": "reactamplifychat7c1567847c156784CustomMessage",
+  "parentStack": "auth",
+  "triggerEnvs": [
+    {
+      "key": "RESOURCENAME",
+      "value": "resourceName"
+    }
+  ],
+  "triggerDir": "C:\\Users\\Work\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\amplify-category-auth\\provider-utils\\awscloudformation\\triggers\\CustomMessage",
+  "triggerTemplate": "CustomMessage.json.ejs",
+  "roleName": "reactamplifychat7c1567847c156784CustomMessage",
+  "skipEdit": true,
+  "REDIRECTURL": "https://dev.chat.studykey.tech",
+  "EMAILSUBJECT": "Verify Your Account",
+  "EMAILMESSAGE": "Please verify your email address",
+  "RESOURCENAME": "resourceName",
+  "enableCors": false
+}

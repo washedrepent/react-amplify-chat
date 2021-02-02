@@ -10,6 +10,21 @@
       "StackName": "amplify-reactamplifychat-dev-162725",
       "StackId": "arn:aws:cloudformation:us-east-1:946031496639:stack/amplify-reactamplifychat-dev-162725/48c9c840-64d4-11eb-9d48-124aa02dc2ed",
       "AmplifyAppId": "d1w12v9ivy4xcq"
+    },
+    "categories": {
+      "function": {
+        "reactamplifychat7c1567847c156784CustomMessage": {
+          "REDIRECTURL": "",
+          "EMAILSUBJECT": "",
+          "EMAILMESSAGE": ""
+        },
+        "reactamplifychat7c1567847c156784PostConfirmation": {
+          "GROUP": "subscriber"
+        }
+      },
+      "auth": {
+        "reactamplifychat7c1567847c156784": {}
+      }
     }
   }
 }

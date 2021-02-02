@@ -1,98 +1,126 @@
-import React, { useEffect, useState } from 'react';
-
-import Amplify from '@aws-amplify/core';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import '@aws-amplify/pubsub';
-
-import { createMessage } from './graphql/mutations';
-import { onCreateMessage } from './graphql/subscriptions';
-import { messagesByChannelId } from './graphql/queries';
-
-import awsExports from './aws-exports';
+import React, { Component } from 'react';
 import './App.css';
+import { Link, BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { Authenticator, SignOut } from 'aws-amplify-react';
+import queryString from 'query-string';
 
+import Navigation from './components/Navigation';
+import Dashboard from './components/Dashboard';
+import Chat from './components/Chat';
+import Error from './components/Error';
 
-function App() {
-  const [messages, setMessages] = useState([]);
-  const [messageBody, setMessageBody] = useState('');
-  //loading intial messages (in order)
-  useEffect(() => {
-      API
-        .graphql(graphqlOperation(messagesByChannelId, {
-          channelID: '1',
-          sortDirection: 'ASC'
-        }))
-        .then((response) => {
-          const items = response?.data?.messagesByChannelID?.items;
+import Amplify, { Auth } from 'aws-amplify';
+import aws_exports from './aws-exports';
+Amplify.configure(aws_exports);
 
-          if (items) {
-            setMessages(items);
-          }
-        })
-    }, []);
+const ProtectedRoute = ({ render: C, props: childProps, ...rest }) => (
+  <Route
+    {...rest}
+    render={rProps =>
+      childProps.isLoggedIn ? (
+        <C {...rProps} {...childProps} />
+      ) : (
+        <Redirect
+          to={`/?redirect=${rProps.location.pathname}${
+            rProps.location.search
+          }`}
+        />
+      )
+    }
+  />
+);
 
-    //for graphql Subcription
-    useEffect(() => {
-      const subscription = API
-        .graphql(graphqlOperation(onCreateMessage))
-        .subscribe({
-          next: (event) => {
-            setMessages([...messages, event.value.data.onCreateMessage]);
-          }
-        });
+const ProppedRoute = ({ render: C, props: childProps, ...rest }) => (
+  <Route {...rest} render={rProps => <C {...rProps} {...childProps} />} />
+);
 
-      return () => {
-        subscription.unsubscribe();
-      };
-    }, [messages]);
-
-  // Function for handling changes to our chat bar
-  const handleChange = (event) => {
-    setMessageBody(event.target.value);
-  };
-
-  // Function for handling the message form submission
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const input = {
-      channelID: '1',
-      author: 'Dave',
-      body: messageBody.trim()
-    };
-
-    try {
-      setMessageBody('');
-      await API.graphql(graphqlOperation(createMessage, { input }))
-    } catch (error) {
-      console.warn(error);
+class AuthComponent extends Component {
+  handleStateChange = state => {
+    console.log("State =" + state);
+    if (state === 'signedIn') {
+      this.props.onUserSignIn();
+      this.props.history.push("/dashboard");
+    }else{
+      this.props.onUserNotSignedIn();
     }
   };
+  render() {
+    console.log(this.props);
+    return (
+      <div>
+        <Authenticator onStateChange={this.handleStateChange}/>
+      </div>
+    );
+  }
+}
+
+const Routes = ({ childProps }) => (
+  <Switch>
+    <ProppedRoute
+      exact
+      path="/"
+      render={AuthComponent}
+      props={childProps}
+    />
+    <ProtectedRoute
+      exact
+      path="/dashboard"
+      render={Dashboard}
+      props={childProps}
+    />
+    <ProtectedRoute
+      exact
+      path="/chat"
+      render={Chat}
+      props={childProps}
+    />
+    <Route component={Error} />
+  </Switch>
+);
 
 
-  return (
-    <div className="container">
-      <div className="messages">
-        <div className="messages-scroller">
-          { messages.map((message) => (
-            <div key={message.id} className={message.author === 'Dave' ? 'message me' : 'message'}>{message.body}</div>
-          )) }
+
+class App extends Component {
+  state = {
+   authState: {
+     isLoggedIn: false
+   }
+ };
+
+ handleUserSignIn = () => {
+   this.setState({ authState: { isLoggedIn: true } });
+ };
+
+ handleUserNotSignedIn = () =>{
+   this.setState({ authState: { isLoggedIn: false} });
+ }
+
+ render() {
+   const childProps = {
+     isLoggedIn: this.state.authState.isLoggedIn,
+     onUserSignIn: this.handleUserSignIn,
+     onUserNotSignedIn: this.handleUserNotSignedIn
+   };
+   return (
+      <div className="App">
+        <h1>Amplify Routes Example</h1>
+        <SignOut />
+        <Navigation />
+        <div>
+          {this.state.authState.isLoggedIn
+            ? 'User is Logged In'
+            : 'Not Logged In'}
         </div>
+        <br />
+        <Routes childProps={childProps} />
       </div>
-      <div className="chat-bar">
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="message"
-            placeholder="Type your message here..."
-            onChange={handleChange}
-            value={messageBody}
-          />
-        </form>
-      </div>
-    </div>
-  );
+    );
+  }
 };
+const AppWithRouter = () => (
+  <Router>
+    <App />
+  </Router>
+);
 
-export default App;
+export default AppWithRouter;
