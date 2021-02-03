@@ -47,7 +47,7 @@ class AuthComponent extends Component {
   render() {
     console.log(this.props);
     return (
-      <div>
+      <div className="authForm">
         <Authenticator onStateChange={this.handleStateChange}/>
       </div>
     );
