@@ -1,19 +1,16 @@
-* {
-  box-sizing: border-box;
+.site-layout-content {
+  min-height: 280px;
+  padding: 24px;
+  background: #fff;
 }
-
-html, body {
-  height: 100%;
+#components-layout-demo-top .logo {
+  float: left;
+  width: 120px;
+  height: 31px;
+  margin: 16px 24px 16px 0;
+  background: rgba(255, 255, 255, 0.3);
 }
-.authForm Span {
-  margin-bottom: 10px;
-  display: block;
-}
-.authForm Input {
-    border-radius: 5px;
-    min-height: 30px;
-    min-width: 100%;
-    margin-bottom: 20px;
-    padding-left: 10px;
-    border-color: #000000;
+.ant-row-rtl #components-layout-demo-top .logo {
+  float: right;
+  margin: 16px 0 16px 24px;
 }

@@ -1,13 +1,31 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-const Navigation = () => {
+import { Menu } from 'antd'
+import { ProfileOutlined, DashboardOutlined, WechatOutlined } from '@ant-design/icons'
+
+const Navigation = (props) => {
+    const { current } = props;
+
+    console.log(current);
     return (
-       <div>
-          <NavLink to="/dashboard">Home</NavLink>
-          <NavLink to="/chat">Chat</NavLink>
-
-       </div>
+        <Menu selectedKeys={[current]} mode="horizontal">
+          <Menu.Item key='dashboard'>
+            <Link to='/dashboard'>
+            <DashboardOutlined />Dashboard
+            </Link>
+          </Menu.Item>
+          <Menu.Item key='home'>
+            <Link to={`/`}>
+              <ProfileOutlined />Profile
+            </Link>
+          </Menu.Item>
+          <Menu.Item key='chat'>
+            <Link to='/chat'>
+              <WechatOutlined />Chat
+            </Link>
+          </Menu.Item>
+        </Menu>
     );
 }
 

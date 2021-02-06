@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import { Auth } from 'aws-amplify'
 import API, { graphqlOperation } from '@aws-amplify/api';
 import '@aws-amplify/pubsub';
 
@@ -8,10 +9,19 @@ import { onCreateMessage } from '../graphql/subscriptions';
 import { messagesByChannelId } from '../graphql/queries';
 
 import './Chat.css';
+import Container from './Container'
 
-function Chat() {
+function Chat(props) {
   const [messages, setMessages] = useState([]);
   const [messageBody, setMessageBody] = useState('');
+  //check if logged in
+  useEffect(() => {
+    Auth.currentAuthenticatedUser()
+      .catch(() => {
+        props.history.push('/');
+      })
+  }, [props]);
+
   //loading intial messages (in order)
   useEffect(() => {
       API
@@ -69,26 +79,28 @@ function Chat() {
 
 
   return (
-    <div className="container">
-      <div className="messages">
-        <div className="messages-scroller">
-          { messages.map((message) => (
-            <div key={message.id} className={message.author === 'Dave' ? 'message me' : 'message'}>{message.body}</div>
-          )) }
+    <Container>
+      <div className="container">
+        <div className="messages">
+          <div className="messages-scroller">
+            { messages.map((message) => (
+              <div key={message.id} className={message.author === 'Dave' ? 'message me' : 'message'}>{message.body}</div>
+            )) }
+          </div>
+        </div>
+        <div className="chat-bar">
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="message"
+              placeholder="Type your message here..."
+              onChange={handleChange}
+              value={messageBody}
+            />
+          </form>
         </div>
       </div>
-      <div className="chat-bar">
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="message"
-            placeholder="Type your message here..."
-            onChange={handleChange}
-            value={messageBody}
-          />
-        </form>
-      </div>
-    </div>
+    </Container>
   );
 };
 

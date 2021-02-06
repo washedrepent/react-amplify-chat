@@ -1,11 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+
+import Router from './Router';
+import 'antd/dist/antd.css';
+
 import reportWebVitals from './reportWebVitals';
 
+import Amplify from 'aws-amplify'
+import aws_exports from './aws-exports';
+Amplify.configure(aws_exports);
+
 ReactDOM.render(
-  <App />,
+  <Router />,
   document.getElementById('root')
 );
 
