@@ -1,5 +1,11 @@
 {
   "AppSyncApiName": "reactamplifychat",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
-  "DynamoDBEnableServerSideEncryption": false
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authreactamplifychat7c1567847c156784",
+      "Outputs.UserPoolId"
+    ]
+  }
 }
