@@ -7,7 +7,7 @@ import { ProfileOutlined, DashboardOutlined, WechatOutlined } from '@ant-design/
 const Navigation = (props) => {
     const { current } = props;
 
-    console.log(current);
+    //console.log(current);
     return (
         <Menu selectedKeys={[current]} mode="horizontal">
           <Menu.Item key='dashboard'>

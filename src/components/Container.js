@@ -16,7 +16,7 @@ const Container = ({ children }) => {
     current = pathname ? pathname : 'home';
     return current;
   }
-    console.log(current);
+  
   const styles = {
     container: {
       margin: '0 auto',

@@ -1,31 +1,33 @@
 import React, { useState, useEffect } from 'react'
-import { Auth } from 'aws-amplify'
-import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
+import { AmplifyAuthenticator, AmplifySignOut, AmplifySignIn } from '@aws-amplify/ui-react'
+import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
+
 import Container from './components/Container'
 
-function App() {
+const App = () => {
+  const [authState, setAuthState] = useState();
+  const [user, setUser] = useState();
+
   useEffect(() => {
-    checkUser()
-  }, []);
+      return onAuthUIStateChange((nextAuthState, authData) => {
+            setAuthState(nextAuthState);
+            setUser(authData)
+        });
+    }, []);
 
- const [user, setUser] = useState({});
-
- async function checkUser() {
-    try {
-      const data = await Auth.currentUserPoolUser()
-      const userInfo = { username: data.username, ...data.attributes, }
-      setUser(userInfo)
-
-    } catch (err) { console.log('error: ', err) }
-  }
- return (
-     <Container>
-       <h1>Profile</h1>
-       <h2>Username: {user.username}</h2>
-       <h3>Email: {user.email}</h3>
-       <h4>Phone: {user.phone_number}</h4>
-       <AmplifySignOut />
-     </Container>
+  return authState === AuthState.SignedIn && user ? (
+    <Container>
+      <h1>Profile</h1>
+      <h2>Username: {user.username}</h2>
+      <h3>Email: {user.attributes.email}</h3>
+      <h4>Phone: {user.attributes.phone_number}</h4>
+      <AmplifySignOut />
+    </Container>
+  ) : (
+    <AmplifyAuthenticator>
+      <AmplifySignIn slot="sign-in" hideSignUp/>
+      <AmplifySignOut />
+    </AmplifyAuthenticator>
   );
 }
-export default withAuthenticator(App);
+export default App;
